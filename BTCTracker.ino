@@ -51,14 +51,14 @@ void loop() {
           Serial.print("Current bitcoin price (USD): ");
           Serial.println(price);
 
-          display.clearDisplay();
+           display.clearDisplay();
           display.setTextSize(1);
           display.setTextColor(WHITE);
           display.setCursor(0,0);
           display.println("BTC Price:");
-          display.setCursor(60,0);
+          display.setCursor(0,10);
           display.setTextSize(2);
-          display.println(price,0);
+          display.println("$" + String(price,0));
           display.display();
           break;
         }
