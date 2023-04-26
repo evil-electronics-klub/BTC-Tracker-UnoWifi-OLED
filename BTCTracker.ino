@@ -4,18 +4,20 @@
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
 #include <ArduinoJson.h>
+#include "BTC_Bitmap.h"
 
-#define OLED_RESET 4
-Adafruit_SSD1306 display(OLED_RESET);
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 64
 
-char ssid[] = "Your_SSID";
-char pass[] = "Your_Password";
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
+
+char ssid[] = "DeezNutz";
+char pass[] = "8nS72Mv2";
 int status = WL_IDLE_STATUS;
 WiFiSSLClient client;
 
 void setup() {
   Serial.begin(9600);
-  while (!Serial) continue;
 
   // initialize the display
   display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
@@ -51,13 +53,23 @@ void loop() {
           Serial.print("Current bitcoin price (USD): ");
           Serial.println(price);
 
-           display.clearDisplay();
-          display.setTextSize(1);
+          display.clearDisplay();
+
+          // Calculate the starting position to centerize the image horizontally
+          int startX = (display.width() - your_bitmap_width) / 2;
+
+          display.drawBitmap(startX, 0, BTC_Bitmap, your_bitmap_width, your_bitmap_height, 1);
+          display.display();
+          // display the BTC logo for 10 seconds
+          delay(10000);
+          //display the actual BTC price for a minute
+          display.clearDisplay();
+          display.setTextSize(2);
           display.setTextColor(WHITE);
           display.setCursor(0,0);
           display.println("BTC Price:");
-          display.setCursor(0,10);
-          display.setTextSize(2);
+          display.setCursor(0,20);
+          display.setTextSize(3);
           display.println("$" + String(price,0));
           display.display();
           break;
@@ -70,5 +82,5 @@ void loop() {
   } else {
     Serial.println("Wifi not connected");
   }
-  delay(60000);
+  delay(300000); // re=poll coindesk every 5 minutes for the price
 }
